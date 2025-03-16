@@ -686,7 +686,8 @@
           </div>
 
           <div class="col-lg-7">
-            <form action="https://formspree.io/f/xjkgolyv" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+	    <form id="contact-form" action="https://formspree.io/f/xjkgolyv" method="POST" class="php-email-form" novalidate>
+            <!--<form action="https://formspree.io/f/xjkgolyv" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">-->
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -771,12 +772,12 @@
 
   <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".php-email-form");
+    const form = document.getElementById("contact-form");
     const sentMessage = document.querySelector(".sent-message");
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // STOP normal form submission
+        event.preventDefault(); // Prevent default form submission
 
         const formData = new FormData(form);
 
@@ -787,15 +788,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Accept": "application/json"
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.ok) {
                 sentMessage.style.display = "block"; // Show success message
-                errorMessage.style.display = "none"; // Hide error message
-                form.reset(); // Clear the form
+                errorMessage.style.display = "none"; // Hide error
+                form.reset(); // Clear the form fields
             } else {
-                errorMessage.textContent = "Something went wrong. Please try again.";
-                errorMessage.style.display = "block";
+                throw new Error("Form submission failed");
             }
         })
         .catch(error => {
@@ -803,13 +808,11 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         });
 
-        return false; // Block any default behavior
+        return false; // Ensure no default behavior occurs
     });
-
-    // Prevent FormSpree default submission globally
-    form.setAttribute("onsubmit", "return false;");
 });
 </script>
+
 
 
 </body>
