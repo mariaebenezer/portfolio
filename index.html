@@ -776,7 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Stop the default form submission
+        event.preventDefault(); // Stop form from submitting normally
 
         const formData = new FormData(form);
 
@@ -794,7 +794,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 errorMessage.style.display = "none"; // Hide error message
                 form.reset(); // Clear form fields
             } else {
-                throw new Error("Something went wrong");
+                errorMessage.textContent = "Something went wrong. Please try again.";
+                errorMessage.style.display = "block";
             }
         })
         .catch(error => {
@@ -802,10 +803,11 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         });
 
-        return false; // Ensure no further default behavior
+        return false; // Ensure no default behavior
     });
 });
 </script>
+
 
 
 </body>
