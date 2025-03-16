@@ -776,26 +776,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Stop form from submitting normally
+        event.preventDefault(); // Stop normal form submission
 
         const formData = new FormData(form);
 
         fetch(form.action, {
-            method: form.method,
+            method: "POST",
             body: formData,
             headers: {
-                'Accept': 'application/json'
+                "Accept": "application/json"
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.ok) {
                 sentMessage.style.display = "block"; // Show success message
-                errorMessage.style.display = "none"; // Hide error message
+                errorMessage.style.display = "none"; // Hide any previous errors
                 form.reset(); // Clear form fields
             } else {
-                errorMessage.textContent = "Something went wrong. Please try again.";
-                errorMessage.style.display = "block";
+                throw new Error("Form submission failed");
             }
         })
         .catch(error => {
@@ -803,11 +807,10 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         });
 
-        return false; // Ensure no default behavior
+        return false; // Stop any default behavior
     });
 });
 </script>
-
 
 
 </body>
