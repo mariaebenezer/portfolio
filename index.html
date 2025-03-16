@@ -776,7 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Stop normal form submission
+        event.preventDefault(); // STOP normal form submission
 
         const formData = new FormData(form);
 
@@ -787,19 +787,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Accept": "application/json"
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.ok) {
                 sentMessage.style.display = "block"; // Show success message
-                errorMessage.style.display = "none"; // Hide any previous errors
-                form.reset(); // Clear form fields
+                errorMessage.style.display = "none"; // Hide error message
+                form.reset(); // Clear the form
             } else {
-                throw new Error("Form submission failed");
+                errorMessage.textContent = "Something went wrong. Please try again.";
+                errorMessage.style.display = "block";
             }
         })
         .catch(error => {
@@ -807,8 +803,11 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         });
 
-        return false; // Stop any default behavior
+        return false; // Block any default behavior
     });
+
+    // Prevent FormSpree default submission globally
+    form.setAttribute("onsubmit", "return false;");
 });
 </script>
 
