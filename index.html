@@ -783,7 +783,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); // STOP form from submitting normally
 
         const formData = new FormData(form);
 
@@ -794,17 +794,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Accept": "application/json"
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
+        .then(response => response.json()) // Process JSON response
         .then(data => {
             if (data.ok) {
                 sentMessage.style.display = "block"; // Show success message
-                errorMessage.style.display = "none"; // Hide error
-                form.reset(); // Clear the form fields
+                errorMessage.style.display = "none"; // Hide errors
+                form.reset(); // Clear form fields
             } else {
                 throw new Error("Form submission failed");
             }
@@ -814,11 +809,16 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.style.display = "block";
         });
 
-        return false; // Ensure no default behavior occurs
+        return false; // Prevent any default behavior
     });
+
+    // Hide any unwanted JSON responses from appearing
+    const preElements = document.getElementsByTagName("pre");
+    for (let i = 0; i < preElements.length; i++) {
+        preElements[i].style.display = "none";
+    }
 });
 </script>
-
 
 
 </body>
