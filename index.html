@@ -776,7 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.querySelector(".error-message");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // Stop the default form submission
 
         const formData = new FormData(form);
 
@@ -790,9 +790,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.ok) {
-                sentMessage.style.display = "block";
-                errorMessage.style.display = "none";
-                form.reset();
+                sentMessage.style.display = "block"; // Show success message
+                errorMessage.style.display = "none"; // Hide error message
+                form.reset(); // Clear form fields
             } else {
                 throw new Error("Something went wrong");
             }
@@ -801,9 +801,12 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage.textContent = "Error submitting form. Please try again.";
             errorMessage.style.display = "block";
         });
+
+        return false; // Ensure no further default behavior
     });
 });
 </script>
+
 
 
 </body>
